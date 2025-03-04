@@ -3,32 +3,47 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose')
 const UserModel = require('./messages')
+const sendSMS = require('./sendSMS');
 
 
 
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json())
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
 
 // Connect MongoDb
-mongoose.connect('mongodb://localhost:2717/user')
+// mongoose.connect('mongodb://localhost:2717/user')
 
-mongoose.connection.on('connected', () => {
-    console.log('Connected to MongoDB');
+// mongoose.connection.on('connected', () => {
+//     console.log('Connected to MongoDB');
+// });
+
+// mongoose.connection.on('error', (err) => {
+//     console.error('MongoDB connection error:', err);
+// });
+
+// mongoose.connection.on('disconnected', () => {
+//     console.log('Disconnected from MongoDB');
+// });
+
+
+app.post('/incoming-messages', (req, res) => {
+    const data = req.body;
+    console.log(`Received message: \n ${JSON.stringify(data, null, 2)}`);
+    res.sendStatus(200);
 });
 
-mongoose.connection.on('error', (err) => {
-    console.error('MongoDB connection error:', err);
+app.post('/delivery-reports', (req, res) => {
+    const data = req.body;
+    console.log(`Delivered message: \n ${JSON.stringify(data, null, 2)}`);
+    res.sendStatus(200);
+    // return JSON.stringify(data, null, 2)
 });
 
-mongoose.connection.on('disconnected', () => {
-    console.log('Disconnected from MongoDB');
-});
 
-
-// Endpoints
+// // Endpoints
 app.post('/topup', async(req,res) => {
         const { phone , amount } = req.body
 
@@ -51,7 +66,7 @@ app.post('/topup', async(req,res) => {
 
 app.get('/tokens', async(req,res) => {
 
-    
+    return json({message: "Oyah Rada"})
 })
 
 
@@ -62,4 +77,5 @@ app.get('/tokens', async(req,res) => {
 
 app.listen(3001, () => {
     console.log("Server is running")
+    sendSMS();
 })
