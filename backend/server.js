@@ -1,5 +1,5 @@
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose')
 const UserModel = require('./messages')
@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }));
-// app.use(cors());
+app.use(cors());
 
 // Connect MongoDb
 // mongoose.connect('mongodb://localhost:2717/user')
@@ -65,8 +65,9 @@ app.post('/topup', async(req,res) => {
 })
 
 app.get('/tokens', async(req,res) => {
+    const units = 40
 
-    return json({message: "Oyah Rada"})
+    res.json({units:units})
 })
 
 
@@ -77,5 +78,5 @@ app.get('/tokens', async(req,res) => {
 
 app.listen(3001, () => {
     console.log("Server is running")
-    sendSMS();
+    // sendSMS();
 })
